@@ -1,2 +1,0 @@
-# Sql-python-heakthcare
-Sql
