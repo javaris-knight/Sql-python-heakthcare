@@ -15,15 +15,20 @@ ORDER BY condition_count DESC;
 
 -- Question 3: Which age groups had the most healthcare encounters?
 SELECT 
-  YEAR(p.BIRTHDATE) AS patient_birth_year,
-     COUNT(e.Id) AS total_encounters
+    CASE 
+        WHEN DATE_PART('year', AGE(p.BIRTHDATE)) < 18 THEN '0-17'
+        WHEN DATE_PART('year', AGE(p.BIRTHDATE)) BETWEEN 18 AND 34 THEN '18-34'
+        WHEN DATE_PART('year', AGE(p.BIRTHDATE)) BETWEEN 35 AND 50 THEN '35-50'
+        WHEN DATE_PART('year', AGE(p.BIRTHDATE)) BETWEEN 51 AND 64 THEN '51-64'
+        ELSE '65+'
+    END AS age_group,
+    COUNT(e.Id) AS total_encounters
 FROM patients p
 JOIN encounters e 
-   ON p.Id = e.PATIENT
-GROUP BY 
-    YEAR(p.BIRTHDATE)
-ORDER BY 
-    total_encounters DESC;
+    ON p.Id = e.PATIENT
+GROUP BY 1
+ORDER BY total_encounters DESC;
+
 
 -- Question 4: What is the average number of visits per patient?
 SELECT 
